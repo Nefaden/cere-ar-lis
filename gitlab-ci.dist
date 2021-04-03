@@ -1,0 +1,11 @@
+build android prod:
+  image: alpine
+  stage: deploy
+  only: 
+    - master
+  before_script:
+    - ''
+  script:
+    - cd android && ./gradlew assembleRelease && cd app/build/outputs/apk/release && jarsigner -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASS" app-release-unsigned.apk "$KEYSTORE_ALIAS" && zipalign 4 app-release-unsigned.apk app-release.apk
+  dependencies:
+    - build android
